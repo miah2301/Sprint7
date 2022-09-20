@@ -7,7 +7,6 @@ import org.junit.Test;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-
 public class ListOfOrdersTest extends Constans {
 
     @Before
@@ -17,7 +16,7 @@ public class ListOfOrdersTest extends Constans {
 
     @DisplayName("Check value orders in list of orders")
     @Test
-    public void listOfOrdersCheck(){
+    public void testOrdersFieldInListOfOrders(){
         Response response = given()
                 .when()
                 .header("Content-type", "application/json")

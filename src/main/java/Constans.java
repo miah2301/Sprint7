@@ -1,4 +1,3 @@
-import org.apache.commons.lang.RandomStringUtils;
 
 public class Constans {
     // LOGIN CONSTANTS

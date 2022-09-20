@@ -1,13 +1,12 @@
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import java.util.List;
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 @RunWith(Parameterized.class)
@@ -22,7 +21,6 @@ public class CreateOrderTest extends Constans{
     private final String commentValue;
     private final List<String> colorValue;
 
-
     public CreateOrderTest(String firstNameValue, String lastNameValue, String addressValue, int metroStationValue,
                            String phoneValue, int rentTimeValue, String deliveryDateValue, String commentValue, List<String> colorValue) {
         this.firstNameValue = firstNameValue;
@@ -36,9 +34,7 @@ public class CreateOrderTest extends Constans{
         this.colorValue = colorValue;
     }
 
-
-
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "{without color}, {with black color}, {with grey color}, {with black and grey colors}")
     public static Object[][] getTestDataCreateOrder() {
         return new Object[][]{
                 {"Naruto", "Uchiha", "Konoha, 142 apt.", 4, "+7 800 355 35 35", 5, "2020-06-06", "Saske, come back to Konoha", null},
@@ -55,21 +51,13 @@ public class CreateOrderTest extends Constans{
 
     @DisplayName("Check status code 201 and track in create order with parameterized test")
     @Test
-    public void createOrder(){
-        Order order = new Order(firstNameValue, lastNameValue, addressValue,
-                metroStationValue, phoneValue, rentTimeValue, deliveryDateValue, commentValue, colorValue);
-        Response response =
-                given()
-                        .header("Content-type", "application/json")
-                        .and()
-                        .body(order)
-                        .when()
-                        .post(API_ORDER);
-        response.then().log().all();
-        response.then().assertThat().statusCode(201);
+    public void testTrackFieldInOrder(){
+        OrdersClient ordersClient = new OrdersClient();
+        ValidatableResponse emptyPasswordField  = ordersClient.getOrdersResponse(
+                new Order(firstNameValue, lastNameValue, addressValue,
+                        metroStationValue, phoneValue, rentTimeValue, deliveryDateValue, commentValue, colorValue));
+        emptyPasswordField
+                .statusCode(201);
         MatcherAssert.assertThat("track", notNullValue());
     }
-
-
-
 }

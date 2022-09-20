@@ -1,5 +1,4 @@
 import io.restassured.response.Response;
-
 import static io.restassured.RestAssured.given;
 
 public class DeleteAndCreateMethods extends Constans{
@@ -12,12 +11,13 @@ public class DeleteAndCreateMethods extends Constans{
                         .and()
                         .body(login)
                         .when()
-                        .post("/api/v1/courier/login");
+                        .post(API_LOGIN);
         String id = response.jsonPath().getString("id");
         given()
                 .when()
-                .delete("/api/v1/courier/" + id);
+                .delete(API_LOGIN + id);
     }
+
     public void createAccount(){
         Courier successfulCourier = new Courier(existingLogin, existingLoginPassword, existingLoginFirstName);
                 given()
